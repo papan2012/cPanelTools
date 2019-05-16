@@ -1,0 +1,126 @@
+# cPanelTools CHANGELOG
+Changes V1.1
+ Added dnsFix.py, script for fixing dns zones and the communication with gmail servers since they implemented
+ strict delivery rules
+ This can be extended for any bulk dns modifications on any cPanel server
+
+ # configuration file:
+ Moved 'ns_ipranges' from [SATerminator] to [Server] section for easier integration with new scripts that rely on dns
+
+== dnsFix.py (v0.5)
+So far scripts only collects data, without changing anything.
+Output goes to STDOUT, so pipe it to get a log.
+In 1.0 version this will fix MX and TXT records for active domains resolving to cPanel server to comply with Gmail new
+standards.
+
+
+CHANGES V1.0
+ - Renamed from Server-Maintenance.
+ Reasons?
+ Playing around with git repos, thinking about the direction I want this to go, and so on...
+
+
+
+# Server-Maintenance CHANGELOG
+CHANGES v1.0
+- fixed all the known bugs
+- report beautification
+- added ResolvingReport.py script to the bundle
+
+Server.py
+ - class method send_mail() is now able to send text from string or file to the report mail address
+
+
+CHANGES v0.9
+LocRem.py (v0.71
+ - fixed special cases for domains using ignored nameservers that would end up under 'check' and 'remote' locrem keys
+
+CHANGES v0.9
+Server.py
+ - implemented get_bw_data() and set_bw_limit() methods for handling bandwith
+SATerminator.py
+ - Bandwith exceeders that are suspended will now have their bandwith limit raised and skipped for termination
+ This will fix termination of those packages due to false time of suspension (1.1.1970)
+ New account bandwith limit will be set according to the account needs until the end of the month
+
+CHANGES v0.83
+Locrem.py
+ - rewritten check_loc_rem() and checkResolving() methods for maintenance sanity reasons
+
+CHANGES v0.82
+Server.py
+ - get_users_domain_list() method will now return list of main domain, add-on domains and parked domains (subdomains excluded)
+LocRem.py
+ - added additional checks for domain resolving, which solved subdomain 'main domain' checks problem
+
+
+CHANGES v0.81
+Server.conf:
+ - moved nameserver IP ranges to [SATerminator] section
+
+
+CHANGES v0.8
+All including scripts are now using cPanel API calls for their operations
+Some report formatting improvements
+LocRem.py:
+ - dry_run compatible
+ - added ignore for Cloudflare name servers with ability to add more to the name server ignore list in case of
+ proxy IP resolving that those servers provide.
+
+CHANGES v0.71
+Server.py:
+ - method get_ip() renamed to resolve()
+ - implemented method get_users_domain_list() with a return dictionary {user:[domain_list]}
+LocRem.py
+ - broken atm, fix planed
+
+CHANGES v0.7
+- Scripts converted to using whm api calls instead of reading the configuration files on disk
+Removed [Server] section from configuration file, since it's not needed any longer
+
+- All defined whmapi api calls from Server.py will now work while script is in test mode (dry run = 1)
+Terminating accounts will not be executed while dry run is enabled, but relavant command will be logged
+as a test run execution.
+
+
+CHANGES v0.61
+python 2.4 compatible
+fixed regression in LocRem.py
+
+CHANGES v0.60 (SATerminator v0.51)
+Reason will be written to log only if there was a reason for suspension
+Default owners will now be listed in configuration file
+
+CHANGES v0.60
+Added SATerminator script to the set
+Script checks account termination date and reason, while resolving all the domain on the package to determine how to properly terminate the account
+
+CHANGES v0.54
+Modified config value parsing for ignoredDomains (domains that should be ignored in checks)
+Added CronTerm script for automated termination of expired or migrated packages
+
+CHANGES v0.53
+Locrem.conf configuration file merged with Server.conf file
+
+CHANGES v0.52
+Packages that were unsuspended will now be suspended with the same reason
+Minor PEP8 beautifications.
+
+CHANGES v0.51
+- Reversing on my decision to make LocRem class inherit the Server class
+    Class methods will be accessible through instances of these classes
+
+- Server class moved to Server.py
+- Server class now logs all cPanel API calls in its own log
+- LocRem class logs MX resolving fix changes in its own log
+
+- Added check for valid commands (only accepting cPanel API calls now)
+- Added debug options for command execution and mail sending
+
+CHANGES v0.5
+Methods more related to server actions moved to Server class.
+This includes:
+    1. Config file for Server Class
+    2. method for calling general server commands
+
+ Purpose of this is to enable reusability of the same class for CronTerm and other server scripts

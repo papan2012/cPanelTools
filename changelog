@@ -1,0 +1,2 @@
+izbačeni print statementi iz Server.py mail_report metode
+Ubačen encoding u ResolvingReport.py za tekst koji se šalje mailom
